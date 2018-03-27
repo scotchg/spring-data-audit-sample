@@ -1,0 +1,45 @@
+package com.github.scotchg.sample.audit.controller;
+
+import com.github.scotchg.sample.audit.infra.entity.TodoEntity;
+import com.github.scotchg.sample.audit.infra.repository.TodoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequiredArgsConstructor
+public class SampleController {
+    private final TodoRepository todoRepository;
+
+    @GetMapping("/todos")
+    @ResponseBody
+    public List<TodoEntity> get(){
+        return todoRepository.findAll();
+    }
+
+    @GetMapping("/todos/{id}")
+    @ResponseBody
+    public TodoEntity getOne(@PathVariable String id){
+        return todoRepository.findOneById(id).orElse(null);
+    }
+
+    @PostMapping("/todos/{id}")
+    @ResponseBody
+    @Transactional
+    public TodoEntity post(@PathVariable String id, @RequestParam String description) {
+        return todoRepository.persistAndFlush(TodoEntity.builder().id(id).description(description).status("CREATED").build());
+    }
+
+    @PutMapping("/todos/{id}")
+    @ResponseBody
+    @Transactional
+    public TodoEntity put(@PathVariable String id, @RequestParam Optional<String> description, String status) {
+        TodoEntity entity = todoRepository.findOneById(id).orElseThrow(IllegalArgumentException::new);
+        description.ifPresent(entity::setDescription);
+        entity.setStatus(status);
+        return todoRepository.saveAndFlush(entity);
+    }
+}
