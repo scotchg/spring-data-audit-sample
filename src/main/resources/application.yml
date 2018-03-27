@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: spring-data-audit-sample
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/mysql
     username: mysql
@@ -13,3 +15,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+
+system:
+  jpa:
+    auditor: ${spring.application.name}
+

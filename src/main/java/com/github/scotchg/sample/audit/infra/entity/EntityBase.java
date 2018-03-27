@@ -22,8 +22,8 @@ public abstract class EntityBase {
     String creator;
     @CreatedDate @Column(name = "CREATED_AT")
     Date createdAt;
-    @LastModifiedBy @Column(name = "UPDATER")
-    String updater;
-    @LastModifiedDate @Column(name = "UPDATE_AT")
-    Date updateAt;
+    @LastModifiedBy @Column(name = "MODIFIER")
+    String modifier;
+    @LastModifiedDate @Column(name = "MODIFIED_AT")
+    Date modifiedAt;
 }

@@ -23,7 +23,7 @@ public class SampleController {
     @GetMapping("/todos/{id}")
     @ResponseBody
     public TodoEntity getOne(@PathVariable String id){
-        return todoRepository.findOneById(id).orElse(null);
+        return todoRepository.findOneById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     @PostMapping("/todos/{id}")
@@ -36,7 +36,9 @@ public class SampleController {
     @PutMapping("/todos/{id}")
     @ResponseBody
     @Transactional
-    public TodoEntity put(@PathVariable String id, @RequestParam Optional<String> description, String status) {
+    public TodoEntity put(@PathVariable String id,
+                          @RequestParam Optional<String> description,
+                          @RequestParam String status) {
         TodoEntity entity = todoRepository.findOneById(id).orElseThrow(IllegalArgumentException::new);
         description.ifPresent(entity::setDescription);
         entity.setStatus(status);
